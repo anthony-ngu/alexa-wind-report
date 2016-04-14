@@ -1,0 +1,13 @@
+{
+  "intents": [
+    {
+      "intent": "GetWindReport",
+      "slots": [
+        {
+          "name": "Location",
+          "type": "AMAZON.US_CITY"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+GetWindReport what is the wind report for {Location}
+GetWindReport what is the wind for {Location}
+GetWindReport what is the wind like for {Location}
+GetWindReport what is the wind like in {Location}
+GetWindReport what's the wind report for {Location}
+GetWindReport what's the wind like for {Location}
+GetWindReport what's the wind like in {Location}
+GetWindReport how much wind in {Location}
+GetWindReport how much wind is there in {Location}
+GetWindReport tell me the wind report for {Location}
+GetWindReport give the wind report for {Location}
+GetWindReport give me the wind report for {Location}
+GetWindReport get the wind report for {Location}
+GetWindReport get me the wind report for {Location}
+GetWindReport find the wind report for {Location}
+GetWindReport find me the wind report for {Location}
+GetWindReport for {Location}
+GetWindReport {Location}
