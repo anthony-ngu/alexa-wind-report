@@ -67,7 +67,6 @@ WindReport.prototype.intentHandlers = {
 function handleGetWindReportIntent(intent, session, response) {
   var location = intent.slots.Location;
   var speechText = "Wind reporting service is currently unavailable. Try again later.";
-  var repromptText = "You can ask for the Wind Report for a destination";
 
   var query_url = WUNDERGROUND_BASE_URL + WUNDERGROUND_API_KEY + WUNDERGROUND_QUERY_URL + location.value + RESPONSE_FORMAT;
   var body = '';
@@ -92,11 +91,7 @@ function handleGetWindReportIntent(intent, session, response) {
         speech: speechText,
         type: AlexaSkill.speechOutputType.PLAIN_TEXT
       };
-      var repromptOutput = {
-        speech: repromptText,
-        type: AlexaSkill.speechOutputType.PLAIN_TEXT
-      };
-      response.askWithCard(speechOutput, repromptOutput, "Wind Report", speechText);
+      response.tellWithCard(speechOutput, "Wind Report", speechText);
     })
   }).on('error', (e) => {
     console.log(`Got error: ${e.message}`);

@@ -15,4 +15,3 @@ GetWindReport get me the wind report for {Location}
 GetWindReport find the wind report for {Location}
 GetWindReport find me the wind report for {Location}
 GetWindReport for {Location}
-GetWindReport {Location}
