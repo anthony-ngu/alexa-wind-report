@@ -13,6 +13,7 @@ var http = require('http');
 /**
  * App ID for the skill
  */
+
 var APP_ID = "{YOUR_APP_ID_HERE}"; //replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
 var WUNDERGROUND_API_KEY = "{YOUR_API_KEY_HERE}";
 var WUNDERGROUND_BASE_URL = "http://api.wunderground.com/api/";
@@ -46,8 +47,8 @@ WindReport.prototype.eventHandlers.onSessionStarted = function (sessionStartedRe
 
 WindReport.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
   console.log("WindReport onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
-  var speechOutput = "Welcome to Wind Report, you can can ask for the Wind Report for a destination";
-  var repromptText = "You can ask for the Wind Report for a destination";
+  var speechOutput = "Welcome to Wind Report, you can ask for the Wind Report for a location";
+  var repromptText = "You can ask for the Wind Report for a location";
   response.ask(speechOutput, repromptText);
 };
 
@@ -61,6 +62,20 @@ WindReport.prototype.intentHandlers = {
   // register custom intent handlers
   "GetWindReport": function (intent, session, response) {
     handleGetWindReportIntent(intent, session, response);
+  },
+
+  "AMAZON.HelpIntent": function (intent, session, response) {
+    response.ask("You can ask for the Wind Report for a location, or, you can say exit", "You can ask for the Wind Report for a location");
+  },
+
+  "AMAZON.StopIntent": function (intent, session, response) {
+    var speechOutput = "Goodbye";
+    response.tell(speechOutput);
+  },
+
+  "AMAZON.CancelIntent": function (intent, session, response) {
+    var speechOutput = "Goodbye";
+    response.tell(speechOutput);
   }
 };
 
