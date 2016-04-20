@@ -96,8 +96,18 @@ function handleGetWindReportIntent(intent, session, response) {
     res.on('end', () => {
       console.log("RequestBody: " + body)
       jsonObject = JSON.parse(body);
+      var wind_string = jsonObject.current_observation.wind_string;
+      // Replace the N, S, E, W, NW, NE. SW, SE desginations
+      wind_string = wind_string.replace(' N ', ' North ');
+      wind_string = wind_string.replace(' S ', ' South ');
+      wind_string = wind_string.replace(' E ', ' East ');
+      wind_string = wind_string.replace(' W ', ' West ');
+      wind_string = wind_string.replace(' NW ', ' Northwest ');
+      wind_string = wind_string.replace(' NE ', ' Northeast ');
+      wind_string = wind_string.replace(' SW ', ' Southwest ');
+      wind_string = wind_string.replace(' SE ', ' Southeast ');
       try {
-        speechText = "The current wind report for " + location.value + " is " + jsonObject.current_observation.wind_string;
+        speechText = "The current wind report for " + location.value + " is " + wind_string;
       } catch (e) {
         speechText = "Wind reporting service is currently unavailable for " + location.value + ". Try again later.";
       }
