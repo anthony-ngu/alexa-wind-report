@@ -81,10 +81,10 @@ WindReport.prototype.intentHandlers = {
 
 function handleGetWindReportIntent(intent, session, response) {
   var location = intent.slots.Location;
-  location = location.replace(' ', '%20');
+  var web_encoded_location_value = location.value.replace(' ', '_');
   var speechText = "Wind reporting service is currently unavailable. Try again later.";
 
-  var query_url = WUNDERGROUND_BASE_URL + WUNDERGROUND_API_KEY + WUNDERGROUND_QUERY_URL + location.value + RESPONSE_FORMAT;
+  var query_url = WUNDERGROUND_BASE_URL + WUNDERGROUND_API_KEY + WUNDERGROUND_QUERY_URL + web_encoded_location_value + RESPONSE_FORMAT;
   var body = '';
   var jsonObject;
 
@@ -97,27 +97,43 @@ function handleGetWindReportIntent(intent, session, response) {
     res.on('end', () => {
       console.log("RequestBody: " + body)
       jsonObject = JSON.parse(body);
-      try {
-        var wind_string = jsonObject.current_observation.wind_string;
-        // Replace the N, S, E, W, NW, NE. SW, SE desginations
-        wind_string = wind_string.replace(' N ', ' North ');
-        wind_string = wind_string.replace(' S ', ' South ');
-        wind_string = wind_string.replace(' E ', ' East ');
-        wind_string = wind_string.replace(' W ', ' West ');
-        wind_string = wind_string.replace(' NW ', ' Northwest ');
-        wind_string = wind_string.replace(' NE ', ' Northeast ');
-        wind_string = wind_string.replace(' SW ', ' Southwest ');
-        wind_string = wind_string.replace(' SE ', ' Southeast ');
-        speechText = "The current wind report for " + location.value + " is " + wind_string;
-      } catch (e) {
-        speechText = "Wind reporting service is currently unavailable for " + location.value + ". Try again later.";
-      }
+      
+      if(jsonObject.response.results != undefined)
+      {
+        var speechOutput = "Looks like there is more than one location called " + location.value + " please try again but specify the state, province, or country";
+        var repromptText = "Please say a location again but specify the state, province, or country";
+        response.ask(speechOutput, repromptText);
+      }else{
+        try {
+          var wind_string = jsonObject.current_observation.wind_string;
+          // Replace the N, S, E, W, NW, NE. SW, SE, WNW, ENE, WSW, ESE designations
+          wind_string = wind_string.replace(' N ', ' North ');
+          wind_string = wind_string.replace(' S ', ' South ');
+          wind_string = wind_string.replace(' E ', ' East ');
+          wind_string = wind_string.replace(' W ', ' West ');
+          wind_string = wind_string.replace(' NW ', ' Northwest ');
+          wind_string = wind_string.replace(' NE ', ' Northeast ');
+          wind_string = wind_string.replace(' SW ', ' Southwest ');
+          wind_string = wind_string.replace(' SE ', ' Southeast ');
+          wind_string = wind_string.replace(' WNW ', ' West Northwest ');
+          wind_string = wind_string.replace(' ENE ', ' East Northeast ');
+          wind_string = wind_string.replace(' WSW ', ' West Southwest ');
+          wind_string = wind_string.replace(' ESE ', ' East Southeast ');
+          wind_string = wind_string.replace(' NNW ', ' North Northwest ');
+          wind_string = wind_string.replace(' NNE ', ' North Northeast ');
+          wind_string = wind_string.replace(' SSW ', ' South Southwest ');
+          wind_string = wind_string.replace(' SSE ', ' South Southeast ');
+          speechText = "The current wind report for " + location.value + " is " + wind_string;
+        } catch (e) {
+          speechText = "Wind reporting service is currently unavailable for " + location.value + ". Try again later.";
+        }
 
-      var speechOutput = {
-        speech: speechText,
-        type: AlexaSkill.speechOutputType.PLAIN_TEXT
-      };
-      response.tellWithCard(speechOutput, "Wind Report", speechText);
+        var speechOutput = {
+          speech: speechText,
+          type: AlexaSkill.speechOutputType.PLAIN_TEXT
+        };
+        response.tellWithCard(speechOutput, "Wind Report", speechText);
+      }
     })
   }).on('error', (e) => {
     console.log(`Got error: ${e.message}`);
